@@ -9,7 +9,7 @@ class CPHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: Theme.of(context).primaryColor,
+//        backgroundColor: Colors.black,
         body: GridView.builder(
             itemCount: HelperClass().entries.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10),

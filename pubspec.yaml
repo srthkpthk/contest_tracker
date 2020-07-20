@@ -20,14 +20,15 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-  - assets/images/logos/atcoder_logo.png
-  - assets/images/logos/codechef_logo.png
-  - assets/images/logos/codeforces_logo.jpg
-  - assets/images/logos/facebook_hackercup_logo.png
-  - assets/images/logos/google_coding_competitions_logo.jpg
-  - assets/images/logos/hackerearth_logo.jpeg
-  - assets/images/logos/hackerrank_logo.png
-  - assets/images/logos/kaggle_logo.png
-  - assets/images/logos/leetcode_logo.jpeg
-  - assets/images/logos/project_euler_logo.jpeg
-  - assets/images/logos/topcoder_logo.jpg
+    - assets/images/logos/atcoder_logo.png
+    - assets/images/logos/codechef_logo.png
+    - assets/images/logos/codeforces_logo.jpg
+    - assets/images/logos/facebook_hackercup_logo.png
+    - assets/images/logos/google_coding_competitions_logo.jpg
+    - assets/images/logos/hackerearth_logo.jpeg
+    - assets/images/logos/hackerrank_logo.png
+    - assets/images/logos/kaggle_logo.png
+    - assets/images/logos/leetcode_logo.jpeg
+    - assets/images/logos/logo.gif
+    - assets/images/logos/project_euler_logo.jpeg
+    - assets/images/logos/topcoder_logo.jpg

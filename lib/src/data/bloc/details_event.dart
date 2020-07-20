@@ -8,3 +8,9 @@ class GetDetails extends DetailsEvent {
 
   GetDetails(this.id);
 }
+
+class PullRefresh extends DetailsEvent {
+  int id;
+
+  PullRefresh(this.id);
+}

@@ -1,17 +1,20 @@
-import 'package:competition_tracker/src/data/model/competitions/meta.dart';
 import 'package:competition_tracker/src/data/model/competitions/objects.dart';
+import 'package:hive/hive.dart';
 
-class ContestEntity {
-  Meta meta;
+part 'contest_entity.g.dart';
+
+@HiveType(typeId: 0)
+class ContestEntity extends HiveObject {
+  @HiveField(0)
   List<Objects> objects;
 
+  ContestEntity(this.objects);
+
   ContestEntity.fromJsonMap(Map<String, dynamic> map)
-      : meta = Meta.fromJsonMap(map["meta"]),
-        objects = List<Objects>.from(map["objects"].map((it) => Objects.fromJsonMap(it)));
+      : objects = List<Objects>.from(map["objects"].map((it) => Objects.fromJsonMap(it)));
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['meta'] = meta == null ? null : meta.toJson();
     data['objects'] = objects != null ? this.objects.map((v) => v.toJson()).toList() : null;
     return data;
   }

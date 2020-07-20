@@ -1,5 +1,6 @@
 import 'package:competition_tracker/src/data/bloc/details_bloc.dart';
 import 'package:competition_tracker/src/data/model/competitions/resource.dart';
+import 'package:competition_tracker/src/data/repositories/contest_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,6 +19,8 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  DetailsBloc _bloc;
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   Future onSelectNotification(String payload) => _launchUrl(payload, context);
@@ -34,6 +37,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
         scheduledNotificationDateTime,
         platform,
         payload: href);
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (this._bloc == null) {
+      final userRepository = RepositoryProvider.of<ContestsRepository>(context);
+      this._bloc = DetailsBloc(userRepository)..add(GetDetails(widget.id));
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
   }
 
   @override
@@ -87,7 +105,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ];
           },
           body: BlocBuilder(
-            bloc: context.bloc<DetailsBloc>(),
+            bloc: _bloc,
             // ignore: missing_return
             builder: (BuildContext context, state) {
               if (state is DetailsInitial) {
@@ -113,65 +131,70 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   child: Text('No Contests in Upcoming time', style: TextStyle()),
                 );
               }
+              if (state is DetailsLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
               if (state is DetailsLoaded) {
-                return ListView.separated(
-                    separatorBuilder: (context, index) => Divider(
-                          thickness: 2,
-                        ),
-                    itemCount: state.contestEntity.objects.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text(state.contestEntity.objects[index].event),
-                          leading: Text('${state.contestEntity.objects[index].duration} Hours'),
-                          trailing: IconButton(
-                              icon: Icon(Icons.notifications),
-                              onPressed: () {
-                                if (DateTime.parse(DateFormat('d-MM-yyyy hh:mm aa')
-                                            .parse(state.contestEntity.objects[index].start)
-                                            .toIso8601String())
-                                        .difference(DateTime.now()) <
-                                    Duration(hours: 1)) {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(
-                                      'This Contest is Going On ? ',
-                                    ),
-                                  ));
-                                } else {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text('Do you want to get notified about this Competition?'),
-                                    action: SnackBarAction(
-                                        label: 'Yes',
-                                        onPressed: () => _scheduleNotification(
-                                              state.contestEntity.objects[index].start,
-                                              state.contestEntity.objects[index].event,
-                                              state.contestEntity.objects[index].resource,
-                                              state.contestEntity.objects[index].href,
-                                              state.contestEntity.objects[index].duration,
-                                            )),
-                                  ));
-                                }
-                              }),
-                          subtitle: Row(
-                            //                        crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Start: ${state.contestEntity.objects[index].start}',
-                              ),
-                              Text(
-                                'End:${state.contestEntity.objects[index].end}',
-                              ),
-                            ],
+                return RefreshIndicator(
+                  onRefresh: () async => _bloc.add(PullRefresh(widget.id)),
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                            thickness: 2,
                           ),
-                          onTap: () => Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  'Launch ${state.contestEntity.objects[index].event} in Browser ?',
+                      itemCount: state.contests.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                            title: Text(state.contests[index].event),
+                            leading: Text('${state.contests[index].duration} Hours'),
+                            trailing: IconButton(
+                                icon: Icon(Icons.notifications),
+                                onPressed: () {
+                                  if (DateTime.parse(DateFormat('d-MM-yyyy hh:mm aa')
+                                              .parse(state.contests[index].start)
+                                              .toIso8601String())
+                                          .difference(DateTime.now()) <
+                                      Duration(hours: 1)) {
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                        'This Contest is Going On ? ',
+                                      ),
+                                    ));
+                                  } else {
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text('Do you want to get notified about this Competition?'),
+                                      action: SnackBarAction(
+                                          label: 'Yes',
+                                          onPressed: () => _scheduleNotification(
+                                                state.contests[index].start,
+                                                state.contests[index].event,
+                                                state.contests[index].resource,
+                                                state.contests[index].href,
+                                                state.contests[index].duration,
+                                              )),
+                                    ));
+                                  }
+                                }),
+                            subtitle: Row(
+                              //                        crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Start: ${state.contests[index].start}',
                                 ),
-                                action: SnackBarAction(
-                                    label: 'Yes',
-                                    onPressed: () => _launchUrl(state.contestEntity.objects[index].href, context)),
-                              )));
-                    });
+                                Text(
+                                  'End:${state.contests[index].end}',
+                                ),
+                              ],
+                            ),
+                            onTap: () => Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Launch ${state.contests[index].event} in Browser ?',
+                                  ),
+                                  action: SnackBarAction(
+                                      label: 'Yes', onPressed: () => _launchUrl(state.contests[index].href, context)),
+                                )));
+                      }),
+                );
               }
             },
           )),

@@ -1,7 +1,5 @@
-import 'package:competition_tracker/src/data/bloc/details_bloc.dart';
 import 'package:competition_tracker/src/util/entriesList.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'details_screen.dart';
 
@@ -24,10 +22,7 @@ class CPHome extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: InkWell(
           onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => BlocProvider<DetailsBloc>(
-                      create: (context) => DetailsBloc()..add(GetDetails(id)), child: DetailsScreen(id, name, icon)))),
+              context, MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(id, name, icon))),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Stack(

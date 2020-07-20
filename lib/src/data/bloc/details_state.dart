@@ -6,11 +6,15 @@ abstract class DetailsState {}
 class DetailsInitial extends DetailsState {}
 
 class DetailsLoaded extends DetailsState {
-  ContestEntity contestEntity;
+  List<Objects> contests;
 
-  DetailsLoaded(this.contestEntity);
+  DetailsLoaded(this.contests);
 }
 
 class DetailsError extends DetailsState {}
 
+class DetailsLoading extends DetailsState {}
+
 class DetailsEmpty extends DetailsState {}
+
+class InternetNotAvailable extends DetailsState {}

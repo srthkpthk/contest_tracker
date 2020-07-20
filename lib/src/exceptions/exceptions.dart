@@ -1,0 +1,2 @@
+
+class NoConnectionException implements Exception {}

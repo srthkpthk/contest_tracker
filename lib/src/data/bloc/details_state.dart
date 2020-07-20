@@ -12,3 +12,5 @@ class DetailsLoaded extends DetailsState {
 }
 
 class DetailsError extends DetailsState {}
+
+class DetailsEmpty extends DetailsState {}

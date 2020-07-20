@@ -11,14 +11,10 @@ class Repository {
       'username': API_UTILS.USERNAME,
       'api_key': API_UTILS.API_KEY,
       'resource__id': id,
+      'end__gt': DateTime.now().toIso8601String(),
       'format': 'json'
     });
-    return ContestEntity.fromJsonMap(response.data);
-  }
-
-  getAllContests() async {
-    var response = await Dio().get(CONTESTS_URL,
-        queryParameters: {'username': API_UTILS.USERNAME, 'api_key': API_UTILS.API_KEY, 'format': 'json'});
+//    log(response.data);
     return ContestEntity.fromJsonMap(response.data);
   }
 }

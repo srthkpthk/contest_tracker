@@ -30,7 +30,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     await flutterLocalNotificationsPlugin.schedule(
         0,
         'The Competition $event is going to start in 1 Hour on ${resource.name}',
-        'Be Prepared - Best of Luck - ${Duration(seconds: duration).inHours.toString()} Hours',
+        'Be Prepared - Best of Luck - $duration Hours',
         scheduledNotificationDateTime,
         platform,
         payload: href);
@@ -54,8 +54,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return <Widget>[
               SliverAppBar(
                 expandedHeight: 300.0,
-                floating: false,
-                pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                     title: Hero(
                       tag: widget.name,
@@ -92,8 +90,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
             // ignore: missing_return
             builder: (BuildContext context, state) {
               if (state is DetailsInitial) {
-                return Center(
-                  child: CircularProgressIndicator(),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Text('Loading Contests...'),
+                  ],
                 );
               }
               if (state is DetailsError) {
@@ -101,24 +107,32 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   child: Text('Error ', style: TextStyle()),
                 );
               }
+              if (state is DetailsEmpty) {
+                return Center(
+                  child: Text('No Contests in Upcoming time', style: TextStyle()),
+                );
+              }
               if (state is DetailsLoaded) {
-                return ListView.builder(
+                return ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                          thickness: 2,
+                        ),
                     itemCount: state.contestEntity.objects.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                           title: Text(state.contestEntity.objects[index].event),
-                          trailing: Text(
-                              '${Duration(seconds: state.contestEntity.objects[index].duration).inHours.toString()} Hours'),
-                          dense: true,
-                          leading: IconButton(
+                          leading: Text('${state.contestEntity.objects[index].duration} Hours'),
+                          trailing: IconButton(
                               icon: Icon(Icons.notifications),
                               onPressed: () {
-                                if (DateTime.parse(state.contestEntity.objects[index].start)
+                                if (DateTime.parse(DateFormat('d-MM-yyyy hh:mm aa')
+                                            .parse(state.contestEntity.objects[index].start)
+                                            .toIso8601String())
                                         .difference(DateTime.now()) <
                                     Duration(hours: 1)) {
                                   Scaffold.of(context).showSnackBar(SnackBar(
                                     content: Text(
-                                      'This Contest has either ended or is in the period of 1 hour',
+                                      'This Contest is Going On ? ',
                                     ),
                                   ));
                                 } else {
@@ -141,10 +155,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Start: ${DateFormat('d-MMM-yyyy hh:mm aa').format(DateTime.parse(state.contestEntity.objects[index].start))}',
+                                'Start: ${state.contestEntity.objects[index].start}',
                               ),
                               Text(
-                                'End: ${DateFormat('d-MMM-yyyy hh:mm aa').format(DateTime.parse(state.contestEntity.objects[index].end))}',
+                                'End:${state.contestEntity.objects[index].end}',
                               ),
                             ],
                           ),

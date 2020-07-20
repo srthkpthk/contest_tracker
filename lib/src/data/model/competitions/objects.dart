@@ -1,13 +1,13 @@
 import 'package:competition_tracker/src/data/model/competitions/resource.dart';
 
 class Objects {
-  final int duration;
-  final String end;
-  final String event;
-  final String href;
-  final int id;
-  final Resource resource;
-  final String start;
+  int duration;
+  String end;
+  String event;
+  String href;
+  int id;
+  Resource resource;
+  String start;
 
   Objects.fromJsonMap(Map<String, dynamic> map)
       : duration = map["duration"],
@@ -17,11 +17,6 @@ class Objects {
         id = map["id"],
         resource = Resource.fromJsonMap(map["resource"]),
         start = map["start"];
-
-  @override
-  String toString() {
-    return 'Objects{duration: $duration, end: $end, event: $event, href: $href, id: $id, resource: $resource, start: $start}';
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

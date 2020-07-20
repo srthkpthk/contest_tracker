@@ -1,7 +1,7 @@
 class Resource {
-  final String icon;
-  final int id;
-  final String name;
+  String icon;
+  int id;
+  String name;
 
   Resource.fromJsonMap(Map<String, dynamic> map)
       : icon = map["icon"],
@@ -14,10 +14,5 @@ class Resource {
     data['id'] = id;
     data['name'] = name;
     return data;
-  }
-
-  @override
-  String toString() {
-    return 'Resource{icon: $icon, id: $id, name: $name}';
   }
 }

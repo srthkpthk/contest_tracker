@@ -26,7 +26,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     var android = AndroidNotificationDetails('channel id', 'channel name', 'channel description');
     var iOS = IOSNotificationDetails();
     var platform = NotificationDetails(android, iOS);
-    var scheduledNotificationDateTime = DateTime.parse(start).subtract(Duration(hours: 1));
+    var scheduledNotificationDateTime = DateTime.now();
     await flutterLocalNotificationsPlugin.schedule(
         0,
         'The Competition $event is going to start in 1 Hour on ${resource.name}',

@@ -3,7 +3,7 @@
 Contest Tracker is an App made in Flutter to keep track of all your Competitive Programming Contests 
 
 - Notifies you 1 Hour before the start of the contest
-  
+- Uses [Clist.by](https://clist.by/)'s API
 
  #### Feel Free to make a PR or Issue
  

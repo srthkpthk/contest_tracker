@@ -29,7 +29,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     var android = AndroidNotificationDetails('channel id', 'channel name', 'channel description');
     var iOS = IOSNotificationDetails();
     var platform = NotificationDetails(android, iOS);
-    var scheduledNotificationDateTime = DateTime.now();
+    var scheduledNotificationDateTime = DateFormat('d-MM-yyyy hh:mm aa').parse(start).subtract(Duration(hours: 1));
     await flutterLocalNotificationsPlugin.schedule(
         0,
         'The Competition $event is going to start in 1 Hour on ${resource.name}',
@@ -164,13 +164,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       content: Text('Do you want to get notified about this Competition?'),
                                       action: SnackBarAction(
                                           label: 'Yes',
-                                          onPressed: () => _scheduleNotification(
-                                                state.contests[index].start,
-                                                state.contests[index].event,
-                                                state.contests[index].resource,
-                                                state.contests[index].href,
-                                                state.contests[index].duration,
-                                              )),
+                                          onPressed: () {
+                                            Scaffold.of(context).showSnackBar(SnackBar(
+                                              content: Text(
+                                                'Notification Scheduled for ${state.contests[index].start}',
+                                              ),
+                                            ));
+                                            _scheduleNotification(
+                                              state.contests[index].start,
+                                              state.contests[index].event,
+                                              state.contests[index].resource,
+                                              state.contests[index].href,
+                                              state.contests[index].duration,
+                                            );
+                                          }),
                                     ));
                                   }
                                 }),

@@ -38,11 +38,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<ContestsRepository>(
-      create: (_) => ContestsRepository(
-        source: ContestsApiRepository(),
-        cache: HiveRepository(this.contestsBox),
-        hasConnection: this.networkConnectivityService.isConnected,
-      ),
+      create: (_) =>
+          ContestsRepository(
+            source: ContestsApiRepository(),
+            cache: HiveRepository(this.contestsBox),
+            hasConnection: this.networkConnectivityService.isConnected,
+          ),
       child: MaterialApp(
         title: 'Competitive Tracker',
         debugShowCheckedModeBanner: false,

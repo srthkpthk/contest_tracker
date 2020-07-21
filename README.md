@@ -22,6 +22,6 @@ Contest Tracker is an App made in Flutter to keep track of all your Competitive 
  
  |    Splash Screen          |
  |:-------------------------:|
- ![](https://github.com/srthkpthk/contest_tracker/blob/master/screenshots/splash_screen.png)|
+ ![](https://github.com/srthkpthk/contest_tracker/blob/master/screenshots/splash_screen.jpg)|
  ##### Peace Out
 
